@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>放大镜</title>
+    <style>
+        #box{
+            width:1200px;
+            margin: 200px auto;
+            height:700px;
+            position: relative;
+        }
+        #boxDiv
+        {
+            width: 350px;
+            height: 350px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            text-align:center;
+            position: relative;
+        }
+        #boxDiv img
+        {
+            vertical-align:middle;
+            width:350px;
+            height:350px;
+        }
+        #boxDiv>#mask{
+            position: absolute;
+            width: 175px;
+            height: 175px;
+            background: #ffa;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            display:none;
+        }
+        #boxDiv>#superMask{
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            cursor: move;
+        }
+        #largeDiv{
+            position: absolute;
+            width: 400px;
+            height: 350px;
+            background: #fff;
+            border: 1px solid #ddd;
+            top: 0;
+            left: 355px;
+            z-index: 999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+    <div id="boxDiv">
+        <img id="mImg" src="images/product-s1-m.jpg"/>
+        <div id="mask"></div>
+        <div id="superMask"></div>
+    </div>
+    <div id="largeDiv"></div>
+</div>
+
+
+<script>
+    //查找id为mask和superMask的div
+    var mask=document.getElementById("mask"),
+            superMask=
+                    document.getElementById("superMask"),
+            largeDiv=
+                    document.getElementById("largeDiv");
+    //为superMask绑定鼠标进入事件
+    superMask.onmouseover=function(){
+        mask.style.display="block";//设置mask显示
+        var i=mImg.src.lastIndexOf(".");
+        var src=mImg.src.slice(0,i-1)
+                +"l"+mImg.src.slice(i);
+        largeDiv.style.backgroundImage=
+                "url("+src+")";
+        largeDiv.style.display="block";
+    };
+    //为superMask绑定鼠标移出事件
+    superMask.onmouseout=function(){
+        mask.style.display="none";//设置mask隐藏
+        largeDiv.style.display="none";
+    };
+    //定义常量MSIZE=175
+    const MSIZE=175,MAX=175;
+    //为superMask绑定鼠标移动事件
+    superMask.onmousemove=function(e){
+        //获得鼠标在superMask内的x坐标
+        //获得鼠标在superMask内的y坐标
+        var x= e.offsetX,y= e.offsetY;
+        //设置mask的left为x-MSIZE/2
+        //设置mask的top为y-MSIZE/2
+        var left=x-MSIZE/2, top=y-MSIZE/2;
+        //如果left<0,让left=0
+        if(left<0){left=0}
+        else if(left>MAX){left=MAX}
+        //如果top<0,让top=0
+        if(top<0){top=0}
+        else if(top>MAX){top=MAX}
+        mask.style.cssText=
+                "left:"+left+"px;top:"+top+"px;display:block";
+        largeDiv.style.backgroundPosition=
+                -16/7*left+"px "+ -16/7*top+"px";
+    }
+</script>
+</body>
+</html>
